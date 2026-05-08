@@ -10,7 +10,7 @@ st.markdown(
     Esta herramienta permite proyectar un flujo mensual de ahorro/inversión:
 
     - monto mensual
-    - plazo en años
+    - plazo en meses
     - tasa anual esperada
     - aporte inicial
     """
@@ -81,12 +81,12 @@ def normalizar_input(texto):
 
 def proyectar_flujo(
     aporte_mensual: float,
-    plazo_anios: int,
+    plazo_meses: int,
     tasa_anual: float,
     aporte_inicial: float = 0.0,
 ) -> pd.DataFrame:
 
-    meses = plazo_anios * 12
+    meses = plazo_meses
     tasa_mensual = (1 + tasa_anual) ** (1 / 12) - 1
 
     registros = []
@@ -131,7 +131,13 @@ with st.sidebar:
         st.error("Formato inválido. Usa formato tipo $1.000.000")
         st.stop()
 
-    plazo_anios = st.slider("Plazo (años)", min_value=1, max_value=40, value=4)
+    plazo_meses = st.number_input(
+        "Plazo (meses)", 
+        min_value=1, 
+        max_value=1200, 
+        value=48, 
+        step=1
+    )
 
     tasa_anual_pct = st.slider(
         "Tasa anual esperada (%)",
@@ -160,7 +166,7 @@ tasa_anual_neta = tasa_anual - costo_admin_anual
 
 df = proyectar_flujo(
     aporte_mensual=aporte_mensual,
-    plazo_anios=plazo_anios,
+    plazo_meses=plazo_meses,
     tasa_anual=tasa_anual_neta,
     aporte_inicial=aporte_inicial,
 )
@@ -210,7 +216,7 @@ df_mostrar = df_mostrar[
     ]
 ]
 
-st.dataframe(df_mostrar, use_container_width=True)
+st.table(df_mostrar)
 
 # -------------------------
 # RESUMEN ANUAL
@@ -240,7 +246,7 @@ resumen_anual["Aporte anual"] = resumen_anual["Aporte anual"].apply(formato_peso
 resumen_anual["Rentabilidad anual"] = resumen_anual["Rentabilidad anual"].apply(formato_pesos)
 resumen_anual["Saldo final"] = resumen_anual["Saldo final"].apply(formato_pesos)
 
-st.dataframe(resumen_anual, use_container_width=True)
+st.table(resumen_anual)
 
 # -------------------------
 # FOOTER
