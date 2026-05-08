@@ -131,16 +131,27 @@ with st.sidebar:
         step=0.1,
     )
 
+    costo_admin_anual_pct = st.number_input(
+        "Costo de administración anual (%)",
+        min_value=0.0,
+        max_value=5.0,
+        value=0.51,
+        step=0.01,
+        format="%.2f"
+    )
+
 # -------------------------
 # CÁLCULO
 # -------------------------
 
 tasa_anual = tasa_anual_pct / 100
+costo_admin_anual = costo_admin_anual_pct / 100
+tasa_anual_neta = tasa_anual - costo_admin_anual
 
 df = proyectar_flujo(
     aporte_mensual=aporte_mensual,
     plazo_anios=plazo_anios,
-    tasa_anual=tasa_anual,
+    tasa_anual=tasa_anual_neta,
     aporte_inicial=aporte_inicial,
 )
 
@@ -227,6 +238,6 @@ st.dataframe(resumen_anual, use_container_width=True)
 
 st.markdown("---")
 st.caption(
-    "Modelo de capitalización mensual con tasa anual efectiva convertida a tasa mensual. "
+    "Modelo de capitalización mensual con tasa anual neta (tasa esperada menos costo de administración). "
     "Proyección referencial, no constituye promesa de rentabilidad."
 )
