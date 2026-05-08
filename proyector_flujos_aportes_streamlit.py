@@ -17,19 +17,29 @@ st.markdown(
 )
 
 with st.expander("Ver desarrollo de las fórmulas matemáticas"):
-    st.markdown("### 1. Conversión de Tasa Anual a Tasa Mensual")
+    st.markdown("### 1. Tasa Anual Neta (Aplicación del Costo)")
     st.markdown(
         """
-        Para que una tasa mensual aplicada durante 12 meses (interés compuesto) genere exactamente el mismo 
-        rendimiento que aplicar la tasa anual una sola vez, se igualan los factores de crecimiento:
+        En este modelo, el **Costo de Administración** anual se descuenta directamente de la expectativa de rentabilidad 
+        antes de realizar cualquier proyección. De esta manera, el simulador opera con una rentabilidad "limpia".
         """
     )
-    st.latex(r"(1 + Tasa_{mensual})^{12} = 1 + Tasa_{anual}")
-    st.markdown("Despejando la tasa mensual (aplicando raíz doceava y restando 1), llegamos a la fórmula final:")
-    st.latex(r"Tasa_{mensual} = (1 + Tasa_{anual})^{\frac{1}{12}} - 1")
+    st.latex(r"Tasa_{anual\_neta} = Tasa_{anual\_esperada} - Costo_{administracion}")
     
     st.markdown("---")
-    st.markdown("### 2. Cálculo del Saldo (Proyección iterativa)")
+    st.markdown("### 2. Conversión a Tasa Mensual")
+    st.markdown(
+        """
+        Para que la tasa mensual aplicada durante 12 meses (interés compuesto) genere el mismo 
+        rendimiento que aplicar la tasa anual neta una sola vez, se igualan los factores:
+        """
+    )
+    st.latex(r"(1 + Tasa_{mensual})^{12} = 1 + Tasa_{anual\_neta}")
+    st.markdown("Despejando (aplicando raíz doceava y restando 1), llegamos a la fórmula de la tasa mensual:")
+    st.latex(r"Tasa_{mensual} = (1 + Tasa_{anual\_neta})^{\frac{1}{12}} - 1")
+    
+    st.markdown("---")
+    st.markdown("### 3. Cálculo del Saldo (Proyección iterativa)")
     st.markdown(
         """
         El simulador proyecta el crecimiento del capital mes a mes. Para cada mes:
